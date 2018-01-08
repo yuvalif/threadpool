@@ -87,6 +87,7 @@ private:
 
         while (true) 
         {
+#if BOOST_VERSION > 105300
             const unsigned int consumed_args = q->consume_all(InternalF);
             if (consumed_args == 0)
             {
@@ -102,6 +103,24 @@ private:
             {
                 pop_count += consumed_args;
             }
+#else
+            Arg arg;
+            if (!q->pop(arg))
+            {
+                // if queue is empty and work is done - the thread exits
+                if (m_done) 
+                {
+                    return;
+                }
+                // wait until there is something in queue
+                std::this_thread::sleep_for(std::chrono::nanoseconds(m_wait_time));
+            }
+            else
+            {
+                InternalF(arg);
+                ++pop_count;
+            }
+#endif
         }
     }
 
@@ -328,7 +347,15 @@ public:
             // drain the queues
             for (auto& q : m_queues)
             {
+#if BOOST_VERSION > 105300
                 q->consume_all(m_cleanup_function);
+#else
+                Arg arg;
+                while(q->pop(arg))
+                {
+                    m_cleanup_function(arg);
+                }
+#endif
             }
             // Reset all queue push/pop counters to zero
             for (auto i = 0; i < m_number_of_workers; ++i)
