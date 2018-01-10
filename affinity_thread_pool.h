@@ -144,7 +144,7 @@ public:
         if (worker_id < m_queues.size())
         {
             std::unique_lock<std::mutex> lock(m_mutexes[worker_id]);
-            m_queues[worker_id].size();
+            return m_queues[worker_id].size();
         }
         return 0;
     }
