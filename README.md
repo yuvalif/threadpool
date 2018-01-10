@@ -1,6 +1,6 @@
 # threadpool
 ## Background
-Unlike some existing implementations for thread pool (see benchmark [here](https://github.com/yuvalif/threadpool_benchmark)), where the function to be executed by the thread is submitted together with its arguments, in the implementations here, the functions is passed in the constructor of the pool, and only its arguments are passed when new work needs to be executed by the pool. This is under the assumption that in most systems there is only a handfull of functions that needs to be executed over and over for different arguments. In such a case, multiple pools could be constructed, one for each function.
+In some existing implementations for a thread pool (see benchmark [here](https://github.com/yuvalif/threadpool_benchmark)), the function to be executed by the thread is submitted together with its arguments to the pool. In the implementations here, however, the functions is passed in the constructor of the pool, and only its arguments are passed when new work needs to be executed by the pool. This is under the assumption that in most systems there is only a handfull of functions that needs to be executed over and over for different arguments. In such a case, multiple pools could be constructed, one for each function.
 
 In addition, even thogh all threads use the same functions, different arguments may be submnitted to speficic workers. This, for example, would allow enforcing FCFS order between the submitter thread and the worker thread. Another case for this is where `F` is not thread safe for certain arguments, if this issue exists, these arguments could be restricted to a specific worker.
 ## Headers
@@ -30,4 +30,6 @@ Although the implementation is different, same interface exist for both classes:
 * **stop()**: stops all worker threads. May receive an indication if just needs to do a cleanp or actual execution of all pending work is needed
 * **queue_size()**: return an estimated size of the queue towards a specific worker
 
-
+## Example
+The `benchmark_pool.cpp` file could be used as an example of how to use the thread pool to calculate how many prime numbers exists in a list of random numbers using the thread pool. To build use: ` g++ -Wall -std=c++11 -O3 -o threadpool_example -lpthread threadpool_example.cpp` (note that clang may be used as well).
+This file could also be used to benchmark the prformance of the different pools, and each pool under different setups.
