@@ -193,7 +193,7 @@ public:
         m_cleanup_function(C),
         m_name(name)
     {
-        for (auto i = 0; i < m_number_of_workers; ++i)
+        for (auto i = 0U; i < m_number_of_workers; ++i)
         {
             try
             {
@@ -239,7 +239,7 @@ public:
                 bool pushed = false;
                 // dont always start from firts queue
                 std::size_t q_idx = (++m_running_counter)%m_number_of_workers;
-                for (auto i = 0; i < m_number_of_workers; ++i)
+                for (auto i = 0U; i < m_number_of_workers; ++i)
                 {
                     std::unique_lock<std::mutex> lock(m_mutexes[q_idx]);
                     if (m_queues[q_idx].size() < m_max_queue_size)
@@ -325,7 +325,7 @@ public:
                 bool pushed = false;
                 // dont always start from firts queue
                 std::size_t q_idx = (++m_running_counter)%m_number_of_workers;
-                for (auto i = 0; i < m_number_of_workers; ++i)
+                for (auto i = 0U; i < m_number_of_workers; ++i)
                 {
                     std::unique_lock<std::mutex> lock(m_mutexes[q_idx]);
                     if (m_queues[q_idx].size() < m_max_queue_size)

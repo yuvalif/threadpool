@@ -30,6 +30,8 @@ public:
         m_policy(policy), 
         m_cpu_count(CPU_COUNT(cpu_set))
     {
+        // CPU_COUNT returns a signed int, but should not be negative
+        assert(m_cpu_count >= 0);
         CPU_ZERO(&m_cpu_set);
         if (m_cpu_count > 0)
         {
@@ -44,7 +46,7 @@ public:
                 }
             }
         }
-        assert(m_cpu_list.size() == m_cpu_count);
+        assert(m_cpu_list.size() == static_cast<std::size_t>(m_cpu_count));
     }
 
     // copy ctor does deep copy
@@ -82,7 +84,7 @@ public:
             memcpy(cpu_set, &m_cpu_set, sizeof(cpu_set_t));
             return true;
         case eWorkerPinned:
-            if (worker < m_cpu_count)
+            if (worker < static_cast<std::size_t>(m_cpu_count))
             {
                 CPU_SET(m_cpu_list[worker], cpu_set);
                 return true;

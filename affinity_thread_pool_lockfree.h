@@ -196,12 +196,12 @@ public:
         m_name(name)
     {
         // Create all queues first.
-        for (auto i = 0; i < m_number_of_workers; ++i)
+        for (auto i = 0U; i < m_number_of_workers; ++i)
         {
             m_queues.emplace_back(new queue_t(queue_size));
         }
         // Reset queue size counters
-        for (auto i = 0; i < m_number_of_workers; ++i)
+        for (auto i = 0U; i < m_number_of_workers; ++i)
         {
             m_queues_push[i] = 0;
             m_queues_pop[i] = 0;
@@ -257,7 +257,7 @@ public:
             std::size_t q_idx = (++m_running_counter)%m_number_of_workers;
             while (!m_done && !pushed)
             {
-                for (auto i = 0; i < m_number_of_workers; ++i)
+                for (auto i = 0U; i < m_number_of_workers; ++i)
                 {
                     if (m_queues[q_idx]->push(arg))
                     {
@@ -302,7 +302,7 @@ public:
             bool pushed = false;
             // dont always start from firts queue
             std::size_t q_idx = (++m_running_counter)%m_number_of_workers;
-            for (auto i = 0; i < m_number_of_workers; ++i)
+            for (auto i = 0U; i < m_number_of_workers; ++i)
             {
                 if (m_queues[q_idx]->push(arg))
                 {
@@ -358,7 +358,7 @@ public:
 #endif
             }
             // Reset all queue push/pop counters to zero
-            for (auto i = 0; i < m_number_of_workers; ++i)
+            for (auto i = 0U; i < m_number_of_workers; ++i)
             {
                 m_queues_push[i] = 0;
                 m_queues_pop[i] = 0;
